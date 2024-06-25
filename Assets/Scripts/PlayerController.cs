@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class PlayerController : Controller
@@ -9,20 +10,44 @@ public class PlayerController : Controller
     public KeyCode MoveBackward;
     public KeyCode TurnClockwise;
     public KeyCode TurnCounterClockwise;
+    public KeyCode ShootKey;
 
     public KeyCode TestPress;
 
+    public float volumeDistance;
+
+    private NoiseMaker noiseMaker;
+
     // Calls ProcessInputs every game tick.
+
+    private void Start()
+    {
+        // If the GameManager exists
+        if (GameManager.instance != null)
+        {
+            // If it's tracking players
+            if (GameManager.instance.players != null)
+            {
+                // Register with the player list
+                GameManager.instance.players.Add(this);
+            }
+        }
+
+        noiseMaker = pawn.gameObject.GetComponent<NoiseMaker>();
+    }
     void Update()
     {
-        ProcessInputs();
+        if (pawn != null)
+        {
+            ProcessInputs();
+        }
     }
 
     //Checks for player inputs every game tick.
     public override void ProcessInputs()
     {
         //Setting functions that happen when the player presses the keys aligned with the KeyCodes.
-        if(Input.GetKey(MoveForward))
+        if (Input.GetKey(MoveForward))
         {
             Debug.Log("Moving Forwards");
             pawn.MoveForward();
@@ -46,9 +71,45 @@ public class PlayerController : Controller
             pawn.TurnCounterClockwise();
         }
 
+        if (Input.GetKeyDown(ShootKey))
+        {
+            pawn.Shoot();
+        }
+
         if (Input.GetKey(TestPress))
         {
             pawn.TestPress();
+        }
+
+        if (Input.GetKey(MoveForward) || Input.GetKey(MoveBackward) || Input.GetKey(TurnClockwise) || Input.GetKey(TurnCounterClockwise))
+        {
+            if (noiseMaker != null)
+            {
+                noiseMaker.volumeDistance = volumeDistance;
+            }
+        }
+        else
+        {
+            if (noiseMaker != null)
+            {
+                noiseMaker.volumeDistance = 0;
+            }
+        }
+    }
+
+    public void OnDestroy()
+    {
+        {
+            // If the GameManager exists
+            if (GameManager.instance != null)
+            {
+                // If it's tracking the players
+                if (GameManager.instance.players != null)
+                {
+                    // Deregister with the GameManager
+                    GameManager.instance.players.Remove(this);
+                }
+            }
         }
     }
 }

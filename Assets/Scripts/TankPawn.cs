@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
+[RequireComponent(typeof(TankMover))]
 
 public class TankPawn : Pawn
 {
@@ -77,4 +78,26 @@ public class TankPawn : Pawn
         SceneManager.LoadScene("Main");
     }
 
+    public override void RotateTowards(Vector3 targetPosition, bool isScared)
+    {
+        Vector3 vectorToTarget;
+
+        if (isScared)
+        {
+            vectorToTarget = transform.position - targetPosition;
+        }
+        else
+        {
+            vectorToTarget = targetPosition - transform.position;
+        }
+
+        Quaternion targetRotation = Quaternion.LookRotation(vectorToTarget, Vector3.up);
+
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+    }
+
+    public override void Shoot()
+    {
+        shooter.Shoot(shellPrefab, fireForce, damageDone, shellLifespan);
+    }
 }

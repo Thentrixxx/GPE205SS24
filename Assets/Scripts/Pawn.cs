@@ -6,13 +6,19 @@ public abstract class Pawn : MonoBehaviour
 {
     public float moveSpeed;
     public float turnSpeed;
+    public float fireForce;
+    public float damageDone;
+    public float shellLifespan;
 
     public Mover mover;
+    public Shooter shooter;
+    public GameObject shellPrefab;
 
     // Setting a variable named "mover" equal to the Mover component of a pawn.
     public virtual void Start()
     {
         mover = GetComponent<Mover>();
+        shooter = GetComponent<Shooter>();
     }
 
     private void Update()
@@ -26,4 +32,6 @@ public abstract class Pawn : MonoBehaviour
     public abstract void TurnClockwise();
     public abstract void TurnCounterClockwise();
     public abstract void TestPress();
+    public abstract void Shoot();
+    public abstract void RotateTowards(Vector3 targetPosition, bool isScared);
 }
