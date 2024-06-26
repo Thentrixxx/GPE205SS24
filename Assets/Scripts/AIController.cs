@@ -156,23 +156,30 @@ public class AIController : Controller
         Seek(target);
 
         //Check if the AI can't see the player.
-        if (CanSee(target))
+        /*if (CanSee(target))
         {
             Debug.Log("Can still see the target in Chase");
         }
         else
         {
-            if (CanSee(target))
+            if (!CanSee(target))
             {
                 ChangeState(AIState.Guard);
             }
-        }
+        }*/
 
         //If the AI has been following the tank for 2 seconds.
         if (Time.time - lastStateChangeTime > 2f)
         {
-            ChangeState(AIState.Attack);
-            return;
+            if (CanSee(target))
+            {
+                ChangeState(AIState.Attack);
+                return;
+            }
+            else
+            {
+                ChangeState(AIState.Scan);
+            }
         }
     }
 
@@ -197,6 +204,12 @@ public class AIController : Controller
             Debug.Log("Can See From Scan");
             ChangeState(AIState.Chase);
             return;
+        }
+
+        //If AI can hear the player
+        if (CanHear(target))
+        {
+            ChangeState(AIState.Chase);
         }
     }
     protected virtual void DoAttackState()
@@ -242,6 +255,12 @@ public class AIController : Controller
             Debug.Log("Can See From Patrol");
             ChangeState(AIState.Chase);
             return;
+        }
+
+        //If can hear the player.
+        if (CanHear(target))
+        {
+            ChangeState(AIState.Chase);
         }
 
         //Checking for health.

@@ -51,3 +51,4 @@ MonoBehaviour:
   TurnCounterClockwise: 97
   ShootKey: 32
   TestPress: 9
+  volumeDistance: 4

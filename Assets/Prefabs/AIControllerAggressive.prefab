@@ -48,10 +48,14 @@ MonoBehaviour:
   currentState: 0
   target: {fileID: 0}
   chaseDistance: 10
-  hearingDistance: 20
+  hearingDistance: 4
   fieldOfView: 45
   seeingDistance: 10
   fleeDistance: 20
   fireRate: 1
-  waypoints: []
+  waypoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   waypointStopDistance: 10

@@ -47,7 +47,15 @@ MonoBehaviour:
   pawn: {fileID: 0}
   currentState: 0
   target: {fileID: 0}
-  chaseDistance: 0
-  hearingDistance: 0
-  fieldOfView: 0
-  seeingDistance: 0
+  chaseDistance: 10
+  hearingDistance: 10
+  fieldOfView: 45
+  seeingDistance: 10
+  fleeDistance: 20
+  fireRate: 1
+  waypoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  waypointStopDistance: 10

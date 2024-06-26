@@ -121,14 +121,14 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Setting Aggressive");
                 AIController = Instantiate(AIControllerAggressivePrefab, spawnTransform.position, Quaternion.identity) as GameObject;
 
-                //Assigns the waypoints to the Aggressive Tank.
-                if (AIController.GetComponent<AIController>() != null)
+                //Assigns the waypoints to the Scared Tank.
+                if (AIController.GetComponent<AIControllerAggressive>() != null)
                 {
-                    AIController normalTank = AIController.GetComponent<AIController>();
+                    AIController aggressiveTank = AIController.GetComponent<AIControllerAggressive>();
 
-                    for (int i = 0; i < 4; i++)
+                    for (int i = 0; i < waypointsAggressive.Length; i++)
                     {
-                        normalTank.waypoints[i] = waypointsAggressive[i];
+                        aggressiveTank.waypoints[i] = waypointsAggressive[i];
                     }
                 }
                 break;
@@ -137,14 +137,14 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Setting Sporadic");
                 AIController = Instantiate(AIControllerSporadicPrefab, spawnTransform.position, Quaternion.identity) as GameObject;
 
-                //Assigns the waypoints to the Sporadic Tank.
-                if (AIController.GetComponent<AIController>() != null)
+                //Assigns the waypoints to the Scared Tank.
+                if (AIController.GetComponent<AIControllerSporadic>() != null)
                 {
-                    AIController normalTank = AIController.GetComponent<AIController>();
+                    AIController sporadicTank = AIController.GetComponent<AIControllerSporadic>();
 
-                    for (int i = 0; i < 4; i++)
+                    for (int i = 0; i < waypointsSporadic.Length; i++)
                     {
-                        normalTank.waypoints[i] = waypointsSporadic[i];
+                        sporadicTank.waypoints[i] = waypointsSporadic[i];
                     }
                 }
                 break;
@@ -153,14 +153,14 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Setting Defense");
                 AIController = Instantiate(AIControllerDefensePrefab, spawnTransform.position, Quaternion.identity) as GameObject;
 
-                //Assigns the waypoints to the Defense Tank.
-                if (AIController.GetComponent<AIController>() != null)
+                //Assigns the waypoints to the Scared Tank.
+                if (AIController.GetComponent<AIControllerDefense>() != null)
                 {
-                    AIController normalTank = AIController.GetComponent<AIController>();
+                    AIController defenseTank = AIController.GetComponent<AIControllerDefense>();
 
-                    for (int i = 0; i < 4; i++)
+                    for (int i = 0; i < waypointsDefense.Length; i++)
                     {
-                        normalTank.waypoints[i] = waypointsDefense[i];
+                        defenseTank.waypoints[i] = waypointsDefense[i];
                     }
                 }
                 break;
