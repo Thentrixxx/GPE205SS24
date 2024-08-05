@@ -8,6 +8,13 @@ public class GameManager : MonoBehaviour
     public GameObject playerControllerPrefab;
     public GameObject playerPawnPrefab;
 
+    public GameObject playerOneControllerPrefab;
+    public GameObject playerOnePawnPrefab;
+
+    public GameObject playerTwoControllerPrefab;
+    public GameObject playerTwoPawnPrefab;
+
+    //AI Prefabs
     public GameObject AIControllerPrefab;
     public GameObject AIControllerScaredPrefab;
     public GameObject AIControllerAggressivePrefab;
@@ -16,7 +23,9 @@ public class GameManager : MonoBehaviour
 
     public GameObject enemyPawnPrefab;
 
+    // Player and AI Tank Spawnpoints
     public Transform playerSpawnPoint;
+    public Transform playerTwoSpawnPoint;
     public Transform enemySpawnPoint;
     public Transform enemyScaredSpawnPoint;
     public Transform enemyAggressiveSpawnPoint;
@@ -27,25 +36,43 @@ public class GameManager : MonoBehaviour
 
     public List<PlayerController> players;
 
+    // AI Tank Waypoints
     public Transform[] waypoints;
     public Transform[] waypointsScare;
     public Transform[] waypointsAggressive;
     public Transform[] waypointsSporadic;
     public Transform[] waypointsDefense;
 
+    // All of the "found" spawn points in the level
     private PawnSpawnPoint[] foundPawnSpawnPoints;
+    private PawnTwoSpawnPoint[] foundPawnTwoSpawnPoints;
     private AINormalSpawnPoint[] foundAINormalSpawnPoints;
     private AIScaredSpawnPoint[] foundAIScaredSpawnPoints;
     private AIAggressiveSpawnPoint[] foundAIAggressiveSpawnPoints;
     private AIDefensiveSpawnPoint[] foundAIDefensiveSpawnPoints;
     private AISporadicSpawnPoint[] foundAISporadicSpawnPoints;
 
+    // Map Generator
     public MapGenerator mapGenerator;
 
+    //Camera
+    public GameObject mainMenuCamera;
+
+    // Game States
+    public GameObject TitleScreenStateObject;
+    public GameObject MainMenuStateObject;
+    public GameObject OptionsStateObject;
+    public GameObject CreditsStateObject;
+    public GameObject GameplayStateObject;
+    public GameObject GameOverScreenStateObject;
+    public GameObject VictoryScreenStateObject;
+
+    //enums
     public enum ControllerType { Normal, Scared, Aggressive, Sporadic, Defense }
     public ControllerType controllerType;
 
     public bool isRandomGeneration;
+    public bool isTwoPlayer;
 
     // Awake is called before the start of the game.
     public void Awake()
@@ -61,13 +88,100 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        if (isRandomGeneration)
+        {
+            DeactivateAllStates();
+            ActivateTitleScreen();
+        }
+        else
+        {
+            DoGameplay();
+        }
+    }
 
+    // Deactivates all Game States.
+    private void DeactivateAllStates()
+    {
+        TitleScreenStateObject.SetActive(false);
+        MainMenuStateObject.SetActive(false);
+        OptionsStateObject.SetActive(false);
+        CreditsStateObject.SetActive(false);
+        GameplayStateObject.SetActive(false);
+        GameOverScreenStateObject.SetActive(false);
+    }
+
+    public void ActivateTitleScreen()
+    {
+        // Deactivate all states.
+        DeactivateAllStates();
+
+        //Activate the title screen
+        TitleScreenStateObject.SetActive(true);
+
+        // Do whatever needs to be done during the title screen.
+    }
+
+    public void ActivateMainMenuScreen()
+    {
+        // Deactivate all states.
+        DeactivateAllStates();
+
+        //Activate the title screen
+        MainMenuStateObject.SetActive(true);
+
+        // Do whatever needs to be done during the main menu.
+    }
+
+    public void ActivateOptionsScreen()
+    {
+        // Deactivate all states.
+        DeactivateAllStates();
+
+        //Activate the title screen
+        OptionsStateObject.SetActive(true);
+
+        // Do whatever needs to be done during the options.
+    }
+
+    public void ActivateCreditsScreen()
+    {
+        // Deactivate all states.
+        DeactivateAllStates();
+
+        //Activate the title screen
+        CreditsStateObject.SetActive(true);
+
+        // Do whatever needs to be done during the credits.
+    }
+
+    // Everything that was in Awake is now here for ease of use.
+    public void ActivateGameplayState()
+    {
+        // Deactivate all states.
+        DeactivateAllStates();
+
+        //Activate the title screen
+        GameplayStateObject.SetActive(true);
+
+        //Disables the main menu camera so that the gameplay ones appear
+        DisableMainMenuCamera();
+
+        // Do whatever needs to be done during the gameplay.
+        DoGameplay();
+    }
+
+
+    public void DoGameplay()
+    {
+        // Do whatever needs to be done during the gameplay.
         players = new List<PlayerController>();
 
         mapGenerator = GetComponent<MapGenerator>();
         mapGenerator.GenerateMap();
 
         foundPawnSpawnPoints = FindObjectsByType<PawnSpawnPoint>(FindObjectsSortMode.None);
+        foundPawnTwoSpawnPoints = FindObjectsByType<PawnTwoSpawnPoint>(FindObjectsSortMode.None);
+
         foundAINormalSpawnPoints = FindObjectsByType<AINormalSpawnPoint>(FindObjectsSortMode.None);
         foundAIScaredSpawnPoints = FindObjectsByType<AIScaredSpawnPoint>(FindObjectsSortMode.None);
         foundAIAggressiveSpawnPoints = FindObjectsByType<AIAggressiveSpawnPoint>(FindObjectsSortMode.None);
@@ -75,6 +189,12 @@ public class GameManager : MonoBehaviour
         foundAISporadicSpawnPoints = FindObjectsByType<AISporadicSpawnPoint>(FindObjectsSortMode.None);
 
         Transform selectedSpawnPointTransform = foundPawnSpawnPoints[UnityEngine.Random.Range(0, foundPawnSpawnPoints.Length)].transform;
+
+        if (isTwoPlayer)
+        {
+            Transform selectedSpawnPointTwoTransform = foundPawnTwoSpawnPoints[UnityEngine.Random.Range(0, foundPawnTwoSpawnPoints.Length)].transform;
+        }
+
         Transform selectedAINormalSpawnPointTransform = null;
         Transform selectedAIScaredSpawnPointTransform = null;
         Transform selectedAIAggressiveSpawnPointTransform = null;
@@ -126,7 +246,8 @@ public class GameManager : MonoBehaviour
             waypointsSporadic[3] = selectedAISporadicSpawnPointTransform.GetComponent<Waypoint>().waypoint.waypoint.waypoint.waypoint.transform;
         }
 
-        SpawnPlayer(selectedSpawnPointTransform);
+        SpawnPlayer();
+
         if (isRandomGeneration)
         {
             SpawnEnemy(ControllerType.Normal, selectedAINormalSpawnPointTransform);
@@ -144,11 +265,42 @@ public class GameManager : MonoBehaviour
             SpawnEnemy(ControllerType.Defense, enemyDefenseSpawnPoint);
         }
     }
-
-    //Start is called once at the start of the game.
-    public void Start()
+    public void ActivateGameOverScreen()
     {
-        
+        // Deactivate all states.
+        DeactivateAllStates();
+
+        //Activate the title screen
+        GameOverScreenStateObject.SetActive(true);
+
+        // Enables the Main Menu camera
+        EnableMainMenuCamera();
+
+        // Do whatever needs to be done during the game over.
+    }
+
+    public void ActivateVictoryScreen()
+    {
+        // Deactivate all states.
+        DeactivateAllStates();
+
+        // Activate the title screen
+        VictoryScreenStateObject.SetActive(true);
+
+        // Enables the main menu camera
+        EnableMainMenuCamera();
+
+        // Do whatever needs to be done during the game over.
+    }
+
+    public void DisableMainMenuCamera()
+    {
+        mainMenuCamera.SetActive(false);
+    }
+
+    public void EnableMainMenuCamera()
+    {
+        mainMenuCamera.SetActive(true);
     }
 
     public void SpawnPlayer()
@@ -166,22 +318,36 @@ public class GameManager : MonoBehaviour
         playerController.GetComponent<Controller>().pawn = playerPawn.GetComponent<Pawn>();
         */
 
-        SpawnPlayer(playerSpawnPoint);
+        //Spawns player two only if the game is two player.
+        if (isTwoPlayer)
+        {
+            SpawnPlayer(playerSpawnPoint, playerOneControllerPrefab, playerOnePawnPrefab);
+            SpawnPlayer(playerTwoSpawnPoint, playerTwoControllerPrefab, playerTwoPawnPrefab);
+        }
+        else
+        {
+            SpawnPlayer(playerSpawnPoint, playerControllerPrefab, playerPawnPrefab);
+        }
     }
 
-    public void SpawnPlayer(Transform spawnPosition)
+    public void SpawnPlayer(Transform spawnPosition, GameObject controllerPrefab, GameObject pawnPrefab)
     {
         // Storing playerController as a variable and spawns it at Vector3.zero.
-        GameObject playerController = Instantiate(playerControllerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        GameObject playerController = Instantiate(controllerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
 
         // Storing the playerPawn as a variable and spawns it at a playerSpawnPoint with its rotation and position.
-        GameObject playerPawn = Instantiate(playerPawnPrefab, spawnPosition.position, spawnPosition.rotation) as GameObject;
+        GameObject playerPawn = Instantiate(pawnPrefab, spawnPosition.position, spawnPosition.rotation) as GameObject;
 
         playerPawn.AddComponent<NoiseMaker>();
 
         // Gets the pawn attribute of the playerController object and sets it equal to the Pawn component of the playerPawn object.
         playerController.GetComponent<Controller>().pawn = playerPawn.GetComponent<Pawn>();
+
+        //Assign the pawn's controller variable to the controller of the component.
+        playerPawn.GetComponent<Pawn>().controller = playerController.GetComponent<Controller>();
     }
+
+    
 
     public void SpawnEnemy(ControllerType controllerType, Transform spawnTransform)
     {

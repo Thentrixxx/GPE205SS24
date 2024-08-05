@@ -42,6 +42,14 @@ public class Health : MonoBehaviour
 
     public void Die(Pawn source)
     {
+        int scoreToAdd = gameObject.GetComponent<Pawn>().rewardPoints;
+
+        /*source.controller.AddToScore(scoreToAdd);*/
+
+        source.controller.AddToScore(gameObject.GetComponent<TankPawn>().rewardPoints);
+
+        source.controller.RemoveFromLives(1);
+
         Destroy(gameObject);
     }
 }

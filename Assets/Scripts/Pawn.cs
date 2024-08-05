@@ -13,6 +13,9 @@ public abstract class Pawn : MonoBehaviour
     public Mover mover;
     public Shooter shooter;
     public GameObject shellPrefab;
+    public Controller controller;
+
+    public int rewardPoints;
 
     // Setting a variable named "mover" equal to the Mover component of a pawn.
     public virtual void Start()

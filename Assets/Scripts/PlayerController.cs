@@ -97,6 +97,27 @@ public class PlayerController : Controller
         }
     }
 
+    public override void AddToScore(int scoreToAdd)
+    {
+        score += scoreToAdd;
+    }
+
+    public override void RemoveFromScore(int scoreToAdd)
+    {
+        score -= scoreToAdd;
+    }
+
+    public override void AddToLives(int livesToAdd)
+    {
+        lives += livesToAdd;
+    }
+
+    public override void RemoveFromLives(int livesToRemove)
+    {
+        lives -= livesToRemove;
+
+    }
+
     public void OnDestroy()
     {
         {
