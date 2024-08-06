@@ -54,3 +54,4 @@ MonoBehaviour:
   ShootKey: 32
   TestPress: 9
   volumeDistance: 4
+  isPlayerOne: 1

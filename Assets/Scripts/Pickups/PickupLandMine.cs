@@ -22,6 +22,8 @@ public class PickupLandMine : MonoBehaviour
         // variable to store other object's Powerup Manager
         PowerupManager powerupManager = other.GetComponent<PowerupManager>();
 
+        GameManager.instance.hitSound.Play();
+
         // If the other object actually has a Powerup Manager
         if (powerupManager != null)
         {

@@ -14,6 +14,15 @@ public class AIController : Controller
 
     // The tank it will chase after
     public GameObject target;
+    public GameObject target1;
+    public GameObject target2;
+
+    // Calculating distance between the player tank and the AI
+    public float distanceX;
+    public float distanceY;
+    public float distanceZ;
+    public float distanceTotalTank1;
+    public float distanceTotalTank2;
 
     // Self Distance Variables
     public float chaseDistance;
@@ -44,8 +53,16 @@ public class AIController : Controller
             // If it's tracking players
             if (GameManager.instance.players != null)
             {
-                Debug.Log("GameManager Found");
-                // Register with the player list
+                target = GameManager.instance.players[0].pawn.gameObject;
+            }
+            // Checking if player 2 exists
+            if (GameManager.instance.isTwoPlayer)
+            {
+                target1 = GameManager.instance.players[0].pawn.gameObject;
+                target2 = GameManager.instance.players[1].pawn.gameObject;
+            }
+            else
+            {
                 target = GameManager.instance.players[0].pawn.gameObject;
             }
         }
@@ -55,12 +72,28 @@ public class AIController : Controller
         }
     }
 
+
     // Update is called once per frame
     protected virtual void Update()
     {
         if (pawn != null)
         {
             ProcessInputs();
+
+            if (GameManager.instance.isTwoPlayer)
+            {
+                if (IsDistanceLessThan(target2, 15))
+                {
+                    if (IsDistanceLessThan(target1, 15))
+                    {
+                        target = target1;
+                    }
+                    else
+                    {
+                        target = target2;
+                    }
+                }
+            }
         }
         else
         {

@@ -59,6 +59,7 @@ public class MapGenerator : MonoBehaviour
     public void GenerateMap()
     {
         // Picks a map based on the exact millisecond.
+        
         UnityEngine.Random.InitState(mapSeed);
         if (usingCurrentTime)
         {
@@ -130,6 +131,20 @@ public class MapGenerator : MonoBehaviour
                 }
 
             }
+        }
+    }
+
+    public void ToggleMapOfTheDay()
+    {
+        if (isMapOfTheDay)
+        {
+            usingCurrentTime = true;
+            isMapOfTheDay = false;
+        }
+        else
+        {
+            usingCurrentTime = false;
+            isMapOfTheDay = true;
         }
     }
 }

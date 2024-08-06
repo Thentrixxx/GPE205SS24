@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public AudioSource menuMusicSource;
+
+    public AudioSource deathSound;
+    public AudioSource hitSound;
+    public AudioSource powerupSound;
+
     public GameObject playerControllerPrefab;
     public GameObject playerPawnPrefab;
 
@@ -92,6 +98,8 @@ public class GameManager : MonoBehaviour
         {
             DeactivateAllStates();
             ActivateTitleScreen();
+
+            menuMusicSource.Play();
         }
         else
         {
@@ -173,6 +181,7 @@ public class GameManager : MonoBehaviour
 
     public void DoGameplay()
     {
+        menuMusicSource.Pause();
         // Do whatever needs to be done during the gameplay.
         players = new List<PlayerController>();
 
@@ -189,11 +198,10 @@ public class GameManager : MonoBehaviour
         foundAISporadicSpawnPoints = FindObjectsByType<AISporadicSpawnPoint>(FindObjectsSortMode.None);
 
         Transform selectedSpawnPointTransform = foundPawnSpawnPoints[UnityEngine.Random.Range(0, foundPawnSpawnPoints.Length)].transform;
+        Transform selectedSpawnPointTwoTransform = foundPawnTwoSpawnPoints[UnityEngine.Random.Range(0, foundPawnTwoSpawnPoints.Length)].transform;
 
-        if (isTwoPlayer)
-        {
-            Transform selectedSpawnPointTwoTransform = foundPawnTwoSpawnPoints[UnityEngine.Random.Range(0, foundPawnTwoSpawnPoints.Length)].transform;
-        }
+        playerSpawnPoint = selectedSpawnPointTransform;
+        playerTwoSpawnPoint = selectedSpawnPointTwoTransform;
 
         Transform selectedAINormalSpawnPointTransform = null;
         Transform selectedAIScaredSpawnPointTransform = null;
@@ -566,4 +574,17 @@ public class GameManager : MonoBehaviour
             AIController.GetComponent<Controller>().pawn = enemyPawn.GetComponent<Pawn>();
         }
     }
+
+    public void ToggleTwoPlayer()
+    {
+        if (isTwoPlayer)
+        {
+            isTwoPlayer = false;
+        }
+        else
+        {
+            isTwoPlayer = true;
+        }
+    }
+
 }

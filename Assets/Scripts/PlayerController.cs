@@ -18,6 +18,8 @@ public class PlayerController : Controller
 
     private NoiseMaker noiseMaker;
 
+    public bool isPlayerOne;
+
     // Calls ProcessInputs every game tick.
 
     private void Start()

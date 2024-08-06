@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TransitionToMainMenu : MonoBehaviour
 {
+    
+
     public void GoToMainMenu()
     {
         if (GameManager.instance != null)
@@ -11,4 +13,5 @@ public class TransitionToMainMenu : MonoBehaviour
             GameManager.instance.ActivateMainMenuScreen();
         }
     }
+
 }

@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class TankShooter : Shooter
 {
+    //Audio Files
+    public AudioSource shootSound;
+
     public Transform firepointTransform;
     // Start is called before the first frame update
     public override void Start()
@@ -20,6 +23,9 @@ public class TankShooter : Shooter
 
     public override void Shoot(GameObject shellPrefab, float fireForce, float damageDone, float lifespan)
     {
+        // Play the sound
+        shootSound.Play();
+
         // Instantiate bullet
         GameObject newShell = Instantiate(shellPrefab, firepointTransform.position, firepointTransform.rotation) as GameObject;
 
