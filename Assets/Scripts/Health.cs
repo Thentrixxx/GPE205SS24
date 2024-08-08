@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Health : MonoBehaviour
 {
@@ -48,12 +49,14 @@ public class Health : MonoBehaviour
         int scoreToAdd = gameObject.GetComponent<Pawn>().rewardPoints;
 
         /*source.controller.AddToScore(scoreToAdd);*/
+        if (source.controller == null) {
+            Debug.Log("Controller is null");
+        }
+        source.controller.AddToScore(gameObject.GetComponent<Pawn>().rewardPoints);
 
-        source.controller.AddToScore(gameObject.GetComponent<TankPawn>().rewardPoints);
+        controller.RemoveFromLives(1);
 
-        source.controller.RemoveFromLives(1);
-
-        Destroy(source);
+        Destroy(gameObject);
 
         //TODO
         if (controller != null)
@@ -73,7 +76,6 @@ public class Health : MonoBehaviour
             GameObject playerTwoPawnPrefab = GameManager.instance.playerTwoPawnPrefab;
 
 
-
             //If the Game is Two Player
             if (GameManager.instance.isTwoPlayer)
             {
@@ -82,12 +84,13 @@ public class Health : MonoBehaviour
                 {
                     if (controller.lives > 0)
                     {
-                        GameManager.instance.SpawnPlayer(playerSpawnPoint, playerOneControllerPrefab, playerOnePawnPrefab);
-                        controller.lives -= 1;
+                        GameManager.instance.SpawnPlayer(playerSpawnPoint, controller, playerOnePawnPrefab);
+                        GameManager.instance.setEnemyAITarget();
                     }
                     else
                     {
-                        
+                        // Checks if there are 2 players dead. If so, end level. If not, continue.
+                        GameManager.instance.howManyPlayersDead();
                     }
                 }
 
@@ -96,12 +99,13 @@ public class Health : MonoBehaviour
                 {
                     if (controller.lives > 0)
                     {
-                        GameManager.instance.SpawnPlayer(playerTwoSpawnPoint, playerTwoControllerPrefab, playerTwoPawnPrefab);
-                        controller.lives -= 1;
+                        GameManager.instance.SpawnPlayer(playerTwoSpawnPoint, controller, playerTwoPawnPrefab);
+                        GameManager.instance.setEnemyAITarget();
                     }
                     else
                     {
-                        
+                        // Checks if there are 2 players dead. If so, end level. If not, continue.
+                        GameManager.instance.howManyPlayersDead();
                     }
                 }
             }
@@ -111,12 +115,13 @@ public class Health : MonoBehaviour
             {
                 if (controller.lives > 0)
                 {
-                    GameManager.instance.SpawnPlayer(playerSpawnPoint, playerControllerPrefab, playerPawnPrefab);
-                    controller.lives -= 1;
+                    GameManager.instance.SpawnPlayer(playerSpawnPoint, controller, playerPawnPrefab);
+                    GameManager.instance.setEnemyAITarget();
                 }
                 else
                 {
-                    GameManager.instance.ActivateGameOverScreen();
+                    Debug.Log("Tank Died");
+                    GameManager.instance.onePlayerReset();
                 }
             }
         }

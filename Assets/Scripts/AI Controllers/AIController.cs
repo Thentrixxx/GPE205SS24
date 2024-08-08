@@ -49,12 +49,19 @@ public class AIController : Controller
 
         if (GameManager.instance != null)
         {
-            Debug.Log("GameManager Exists");
+            // If it's tracking enemies
+            if (GameManager.instance.enemies != null)
+            {
+                // Register with the player list
+                GameManager.instance.enemies.Add(this);
+            }
+
             // If it's tracking players
             if (GameManager.instance.players != null)
             {
                 target = GameManager.instance.players[0].pawn.gameObject;
             }
+
             // Checking if player 2 exists
             if (GameManager.instance.isTwoPlayer)
             {
@@ -70,6 +77,7 @@ public class AIController : Controller
         {
             Debug.Log("Game Manager does not exist");
         }
+        
     }
 
 

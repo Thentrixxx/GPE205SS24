@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pawn: {fileID: 0}
   score: 0
-  lives: 3
+  lives: 1
   MoveForward: 119
   MoveBackward: 115
   TurnClockwise: 100
@@ -54,3 +54,4 @@ MonoBehaviour:
   ShootKey: 32
   TestPress: 9
   volumeDistance: 4
+  isPlayerOne: 0

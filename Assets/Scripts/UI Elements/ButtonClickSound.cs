@@ -7,6 +7,7 @@ public class ButtonClickSound : MonoBehaviour
     public AudioSource clickSource;
     public void playClick()
     {
+        clickSource = GameManager.instance.clickSound;
         clickSource.Play();
     }
 }

@@ -1,12 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class GameManager : MonoBehaviour
 {
     public AudioSource menuMusicSource;
-
+    public AudioSource clickSound;
     public AudioSource deathSound;
     public AudioSource hitSound;
     public AudioSource powerupSound;
@@ -41,6 +43,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public List<PlayerController> players;
+    public List<AIController> enemies;
 
     // AI Tank Waypoints
     public Transform[] waypoints;
@@ -77,8 +80,11 @@ public class GameManager : MonoBehaviour
     public enum ControllerType { Normal, Scared, Aggressive, Sporadic, Defense }
     public ControllerType controllerType;
 
+    public int playersDead;
+
     public bool isRandomGeneration;
     public bool isTwoPlayer;
+    public bool hasBeenPlayed;
 
     // Awake is called before the start of the game.
     public void Awake()
@@ -89,17 +95,41 @@ public class GameManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
         }
-
         else
         {
             Destroy(gameObject);
         }
+
+        onAwake();
+    }
+
+    public void Start()
+    {
+        
+    }
+
+    public void onAwake()
+    {
         if (isRandomGeneration)
         {
-            DeactivateAllStates();
-            ActivateTitleScreen();
+            if (hasBeenPlayed)
+            {
+                Debug.Log("Has Been Played");
+                // Sets GameManager variables to be correct again.
+                onResetLevel();
 
-            menuMusicSource.Play();
+                // Enables the Main Menu camera.
+                EnableMainMenuCamera();
+                /*
+                DeactivateAllStates();
+                ActivateGameOverScreen();*/
+
+            }
+            else
+            {
+                DeactivateAllStates();
+                ActivateTitleScreen();
+            }
         }
         else
         {
@@ -116,6 +146,7 @@ public class GameManager : MonoBehaviour
         CreditsStateObject.SetActive(false);
         GameplayStateObject.SetActive(false);
         GameOverScreenStateObject.SetActive(false);
+        VictoryScreenStateObject.SetActive(false);
     }
 
     public void ActivateTitleScreen()
@@ -127,6 +158,11 @@ public class GameManager : MonoBehaviour
         TitleScreenStateObject.SetActive(true);
 
         // Do whatever needs to be done during the title screen.
+        if (hasBeenPlayed != true)
+        {
+            menuMusicSource.gameObject.SetActive(true);
+            menuMusicSource.Play();
+        }
     }
 
     public void ActivateMainMenuScreen()
@@ -185,7 +221,6 @@ public class GameManager : MonoBehaviour
         // Do whatever needs to be done during the gameplay.
         players = new List<PlayerController>();
 
-        mapGenerator = GetComponent<MapGenerator>();
         mapGenerator.GenerateMap();
 
         foundPawnSpawnPoints = FindObjectsByType<PawnSpawnPoint>(FindObjectsSortMode.None);
@@ -275,16 +310,13 @@ public class GameManager : MonoBehaviour
     }
     public void ActivateGameOverScreen()
     {
-        // Deactivate all states.
         DeactivateAllStates();
 
-        //Activate the title screen
         GameOverScreenStateObject.SetActive(true);
 
-        // Enables the Main Menu camera
-        EnableMainMenuCamera();
-
         // Do whatever needs to be done during the game over.
+        menuMusicSource.gameObject.SetActive(true);
+        menuMusicSource.Play();
     }
 
     public void ActivateVictoryScreen()
@@ -295,10 +327,9 @@ public class GameManager : MonoBehaviour
         // Activate the title screen
         VictoryScreenStateObject.SetActive(true);
 
-        // Enables the main menu camera
-        EnableMainMenuCamera();
-
         // Do whatever needs to be done during the game over.
+        menuMusicSource.gameObject.SetActive(true);
+        menuMusicSource.Play();
     }
 
     public void DisableMainMenuCamera()
@@ -313,19 +344,6 @@ public class GameManager : MonoBehaviour
 
     public void SpawnPlayer()
     {
-        /*
-        // Storing playerController as a variable and spawns it at Vector3.zero.
-        GameObject playerController = Instantiate(playerControllerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-
-        // Storing the playerPawn as a variable and spawns it at a playerSpawnPoint with its rotation and position.
-        GameObject playerPawn = Instantiate(playerPawnPrefab, playerSpawnPoint.position, playerSpawnPoint.rotation) as GameObject;
-
-        playerPawn.AddComponent<NoiseMaker>();
-
-        // Gets the pawn attribute of the playerController object and sets it equal to the Pawn component of the playerPawn object.
-        playerController.GetComponent<Controller>().pawn = playerPawn.GetComponent<Pawn>();
-        */
-
         //Spawns player two only if the game is two player.
         if (isTwoPlayer)
         {
@@ -355,6 +373,20 @@ public class GameManager : MonoBehaviour
         playerPawn.GetComponent<Pawn>().controller = playerController.GetComponent<Controller>();
     }
 
+    public void SpawnPlayer(Transform spawnPosition, Controller controller, GameObject pawnPrefab)
+    {
+        // Storing the playerPawn as a variable and spawns it at a playerSpawnPoint with its rotation and position.
+        GameObject playerPawn = Instantiate(pawnPrefab, spawnPosition.position, spawnPosition.rotation) as GameObject;
+
+        playerPawn.AddComponent<NoiseMaker>();
+
+        // Gets the pawn attribute of the playerController object and sets it equal to the Pawn component of the playerPawn object.
+        controller.pawn = playerPawn.GetComponent<Pawn>();
+
+        //Assign the pawn's controller variable to the controller of the component.
+        playerPawn.GetComponent<Pawn>().controller = controller;
+    }
+
     
 
     public void SpawnEnemy(ControllerType controllerType, Transform spawnTransform)
@@ -380,6 +412,8 @@ public class GameManager : MonoBehaviour
                             {
                                 normalTank.waypoints[i] = waypoints[i];
                             }
+                            
+
                         }
                     }
                     else
@@ -572,6 +606,22 @@ public class GameManager : MonoBehaviour
 
             // Gets the pawn attribute of the playerController object and sets it equal to the Pawn component of the playerPawn object.
             AIController.GetComponent<Controller>().pawn = enemyPawn.GetComponent<Pawn>();
+
+            enemyPawn.GetComponent<Pawn>().controller = AIController.GetComponent<Controller>();
+        }
+    }
+
+    public void setEnemyAITarget()
+    {
+        foreach (AIController aiController in enemies)
+        {
+            aiController.target = players[0].pawn.gameObject;
+
+            if (isTwoPlayer)
+            {
+                aiController.target1 = players[0].pawn.gameObject;
+                aiController.target2 = players[1].pawn.gameObject;
+            }
         }
     }
 
@@ -587,4 +637,130 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void howManyPlayersDead()
+    {
+        playersDead += 1;
+        if (playersDead >= 2)
+        {
+            playersDead = 0;
+            hasBeenPlayed = true;
+            SceneManager.LoadScene("Main");
+            onAwake();
+        }
+        else
+        {
+            setEnemyAITarget();
+        }
+    }
+
+    public void onePlayerReset()
+    {
+        Debug.Log("onePlayerReset Called");
+        hasBeenPlayed = true;
+        SceneManager.LoadScene("Main");
+        onAwake();
+    }
+
+    public void onResetLevel()
+    {
+        Debug.Log("onResetLevel Called");
+        //First, Reset the Values
+        // Cleared Lists
+        players.Clear();
+        enemies.Clear();
+
+        // Cleared Arrays
+        Array.Clear(waypoints, 0, waypoints.Length);
+        Array.Clear(waypointsScare, 0, waypointsScare.Length);
+        Array.Clear(waypointsAggressive, 0, waypointsAggressive.Length);
+        Array.Clear(waypointsSporadic, 0, waypointsSporadic.Length);
+        Array.Clear(waypointsDefense, 0, waypointsDefense.Length);
+
+        Array.Clear(foundPawnSpawnPoints, 0, foundPawnSpawnPoints.Length);
+        Array.Clear(foundPawnTwoSpawnPoints, 0, foundPawnTwoSpawnPoints.Length);
+        Array.Clear(foundAINormalSpawnPoints, 0, foundAINormalSpawnPoints.Length);
+        Array.Clear(foundAIScaredSpawnPoints, 0, foundAIScaredSpawnPoints.Length);
+        Array.Clear(foundAIAggressiveSpawnPoints, 0, foundAIAggressiveSpawnPoints.Length);
+        Array.Clear(foundAIDefensiveSpawnPoints, 0, foundAIDefensiveSpawnPoints.Length);
+        Array.Clear(foundAISporadicSpawnPoints, 0, foundAISporadicSpawnPoints.Length);
+
+        // Then, reattach the values to the Game Manager.
+
+        
+        //Game Objects of the Audio Source Objects
+        MenuMusicObject menuMusicGameObject = FindFirstObjectByType<MenuMusicObject>();
+
+        if (menuMusicGameObject != null)
+        {
+            Debug.Log("menuMusicGameObject Found");
+        }
+        else
+        {
+            Debug.Log("menuMusicGameObject Not Found");
+        }
+        /*
+        ClickSoundObject clickSoundGameObject = FindFirstObjectByType<ClickSoundObject>();
+        DeathSoundObject deathSoundGameObject = FindFirstObjectByType<DeathSoundObject>();
+        HitSoundObject hitSoundGameObject = FindFirstObjectByType<HitSoundObject>();
+        PowerupSoundObject powerupSoundGameObject = FindFirstObjectByType<PowerupSoundObject>();*/
+
+        // Matching the Audio Source components of those game objects.
+        //menuMusicSource = menuMusicGameObject.gameObject.GetComponent<AudioSource>()/
+        GameObject testMainMenuObject = menuMusicGameObject.gameObject;
+
+        if (testMainMenuObject != null)
+        {
+            Debug.Log("testMainMenuObject Found");
+        }
+        else
+        {
+            Debug.Log("testMainMenuObject Not Found");
+        }
+
+        AudioSource testMainMenuAudioSource = testMainMenuObject.GetComponent<AudioSource>();
+        if (testMainMenuAudioSource != null)
+        {
+            Debug.Log("testMainMenuAudioSource Found");
+        }
+        else
+        {
+            Debug.Log("testMainMenuAudioSource Not Found");
+        }
+
+        menuMusicSource = testMainMenuAudioSource;
+        if (menuMusicSource != null)
+        {
+            Debug.Log("menuMusicSource Found");
+        }
+        else
+        {
+            Debug.Log("menuMusicSource Not Found");
+        }
+
+        /*clickSound = clickSoundGameObject.gameObject.GetComponent<AudioSource>();
+        deathSound = deathSoundGameObject.gameObject.GetComponent<AudioSource>();
+        hitSound = hitSoundGameObject.gameObject.GetComponent<AudioSource>();
+        powerupSound = powerupSoundGameObject.gameObject.GetComponent<AudioSource>();
+
+        // Finding the menu state objects
+        TitleScreenObject titleScreenObject = FindFirstObjectByType<TitleScreenObject>();
+        MainMenuObject mainMenuObject = FindFirstObjectByType<MainMenuObject>();
+        OptionsMenuObject optionsMenuObject = FindFirstObjectByType<OptionsMenuObject>();
+        CreditsMenuObject creditsMenuObject = FindFirstObjectByType<CreditsMenuObject>();
+        GameplayMenuObject gameplayMenuObject = FindFirstObjectByType<GameplayMenuObject>();
+        GameOverMenuObject gameOverMenuObject = FindFirstObjectByType<GameOverMenuObject>();
+        VictoryMenuObject victoryMenuObject = FindFirstObjectByType<VictoryMenuObject>();
+
+        //Setting the variables for the menu states.
+        TitleScreenStateObject = titleScreenObject.gameObject;
+        MainMenuStateObject = mainMenuObject.gameObject;
+        OptionsStateObject = optionsMenuObject.gameObject;
+        CreditsStateObject = creditsMenuObject.gameObject;
+        GameplayStateObject = gameplayMenuObject.gameObject;
+        GameOverScreenStateObject = gameOverMenuObject.gameObject;
+        VictoryScreenStateObject = victoryMenuObject.gameObject;
+
+        MapGenerator mapGeneratorObject = FindFirstObjectByType<MapGenerator>();
+        mapGenerator = mapGeneratorObject;*/
+    }
 }
