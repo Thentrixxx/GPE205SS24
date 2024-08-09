@@ -637,6 +637,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void ToggleMapOfTheDay()
+    {
+        if (mapGenerator.isMapOfTheDay)
+        {
+            mapGenerator.isMapOfTheDay = false;
+            mapGenerator.usingCurrentTime = true;
+        }
+        else
+        {
+            mapGenerator.isMapOfTheDay = true;
+            mapGenerator.usingCurrentTime = false;
+        }
+    }
+
     public void howManyPlayersDead()
     {
         playersDead += 1;

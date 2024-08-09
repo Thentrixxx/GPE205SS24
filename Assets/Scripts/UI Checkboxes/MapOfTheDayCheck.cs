@@ -6,5 +6,6 @@ using TMPro;
 
 public class MapOfTheDayCheck : MonoBehaviour
 {
+    
 
 }

@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pawn: {fileID: 0}
   score: 0
-  lives: 1
+  lives: 3
   MoveForward: 119
   MoveBackward: 115
   TurnClockwise: 100

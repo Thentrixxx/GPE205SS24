@@ -54,7 +54,10 @@ public class Health : MonoBehaviour
         }
         source.controller.AddToScore(gameObject.GetComponent<Pawn>().rewardPoints);
 
-        controller.RemoveFromLives(1);
+        if (controller != null)
+        {
+            controller.RemoveFromLives(1);
+        }
 
         Destroy(gameObject);
 
