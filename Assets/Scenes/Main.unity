@@ -1608,8 +1608,8 @@ GameObject:
   - component: {fileID: 515443031}
   - component: {fileID: 515443030}
   - component: {fileID: 515443029}
-  - component: {fileID: 515443028}
   - component: {fileID: 515443032}
+  - component: {fileID: 515443033}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -1637,18 +1637,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -40}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &515443028
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 515443026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0968d154d54918345ae32eab1c3006cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &515443029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1693,9 +1681,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 515443028}
-        m_TargetAssemblyTypeName: TransitionToMainMenu, Assembly-CSharp
-        m_MethodName: GoToMainMenu
+      - m_Target: {fileID: 515443033}
+        m_TargetAssemblyTypeName: Quit, Assembly-CSharp
+        m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1708,6 +1696,18 @@ MonoBehaviour:
       - m_Target: {fileID: 515443032}
         m_TargetAssemblyTypeName: ButtonClickSound, Assembly-CSharp
         m_MethodName: playClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 515443033}
+        m_TargetAssemblyTypeName: Quit, Assembly-CSharp
+        m_MethodName: QuitEditor
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1768,6 +1768,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clickSource: {fileID: 1264700159}
+--- !u!114 &515443033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515443026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84b42b02bccfd764f9119e3fab97c5fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &559420731
 GameObject:
   m_ObjectHideFlags: 0
@@ -1784,7 +1796,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &559420732
 Transform:
   m_ObjectHideFlags: 0
@@ -2297,7 +2309,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Back
+  m_text: Quit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2843,8 +2855,8 @@ GameObject:
   - component: {fileID: 805458492}
   - component: {fileID: 805458491}
   - component: {fileID: 805458490}
-  - component: {fileID: 805458489}
   - component: {fileID: 805458493}
+  - component: {fileID: 805458494}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -2872,18 +2884,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -57}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &805458489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 805458487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0968d154d54918345ae32eab1c3006cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &805458490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2928,9 +2928,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 805458489}
-        m_TargetAssemblyTypeName: TransitionToMainMenu, Assembly-CSharp
-        m_MethodName: GoToMainMenu
+      - m_Target: {fileID: 805458494}
+        m_TargetAssemblyTypeName: Quit, Assembly-CSharp
+        m_MethodName: QuitEditor
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2943,6 +2943,18 @@ MonoBehaviour:
       - m_Target: {fileID: 805458493}
         m_TargetAssemblyTypeName: ButtonClickSound, Assembly-CSharp
         m_MethodName: playClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 805458494}
+        m_TargetAssemblyTypeName: Quit, Assembly-CSharp
+        m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3003,6 +3015,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clickSource: {fileID: 1264700159}
+--- !u!114 &805458494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805458487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84b42b02bccfd764f9119e3fab97c5fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &817414206
 GameObject:
   m_ObjectHideFlags: 0
@@ -3454,8 +3478,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f99744087f2a4d2439a4279154649f3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 2
-  cols: 2
+  rows: 3
+  cols: 3
   roomWidth: 50
   roomHeight: 50
   gridPrefabs:
@@ -3858,7 +3882,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Back
+  m_text: Quit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5452,7 +5476,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1419097552
 Transform:
   m_ObjectHideFlags: 0
@@ -5681,7 +5705,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1459601649
 Transform:
   m_ObjectHideFlags: 0
@@ -8049,7 +8073,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2062337534
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8098,7 +8122,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2065590511
 Transform:
   m_ObjectHideFlags: 0

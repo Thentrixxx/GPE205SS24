@@ -112,24 +112,8 @@ public class GameManager : MonoBehaviour
     {
         if (isRandomGeneration)
         {
-            if (hasBeenPlayed)
-            {
-                Debug.Log("Has Been Played");
-                // Sets GameManager variables to be correct again.
-                onResetLevel();
-
-                // Enables the Main Menu camera.
-                EnableMainMenuCamera();
-                /*
-                DeactivateAllStates();
-                ActivateGameOverScreen();*/
-
-            }
-            else
-            {
-                DeactivateAllStates();
-                ActivateTitleScreen();
-            }
+            DeactivateAllStates();
+            ActivateTitleScreen();
         }
         else
         {
@@ -138,7 +122,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Deactivates all Game States.
-    private void DeactivateAllStates()
+    public void DeactivateAllStates()
     {
         TitleScreenStateObject.SetActive(false);
         MainMenuStateObject.SetActive(false);
@@ -658,123 +642,13 @@ public class GameManager : MonoBehaviour
         {
             playersDead = 0;
             hasBeenPlayed = true;
-            SceneManager.LoadScene("Main");
-            onAwake();
+            EnableMainMenuCamera();
+            DeactivateAllStates();
+            ActivateGameOverScreen();
         }
         else
         {
             setEnemyAITarget();
         }
-    }
-
-    public void onePlayerReset()
-    {
-        Debug.Log("onePlayerReset Called");
-        hasBeenPlayed = true;
-        SceneManager.LoadScene("Main");
-        onAwake();
-    }
-
-    public void onResetLevel()
-    {
-        Debug.Log("onResetLevel Called");
-        //First, Reset the Values
-        // Cleared Lists
-        players.Clear();
-        enemies.Clear();
-
-        // Cleared Arrays
-        Array.Clear(waypoints, 0, waypoints.Length);
-        Array.Clear(waypointsScare, 0, waypointsScare.Length);
-        Array.Clear(waypointsAggressive, 0, waypointsAggressive.Length);
-        Array.Clear(waypointsSporadic, 0, waypointsSporadic.Length);
-        Array.Clear(waypointsDefense, 0, waypointsDefense.Length);
-
-        Array.Clear(foundPawnSpawnPoints, 0, foundPawnSpawnPoints.Length);
-        Array.Clear(foundPawnTwoSpawnPoints, 0, foundPawnTwoSpawnPoints.Length);
-        Array.Clear(foundAINormalSpawnPoints, 0, foundAINormalSpawnPoints.Length);
-        Array.Clear(foundAIScaredSpawnPoints, 0, foundAIScaredSpawnPoints.Length);
-        Array.Clear(foundAIAggressiveSpawnPoints, 0, foundAIAggressiveSpawnPoints.Length);
-        Array.Clear(foundAIDefensiveSpawnPoints, 0, foundAIDefensiveSpawnPoints.Length);
-        Array.Clear(foundAISporadicSpawnPoints, 0, foundAISporadicSpawnPoints.Length);
-
-        // Then, reattach the values to the Game Manager.
-
-        
-        //Game Objects of the Audio Source Objects
-        MenuMusicObject menuMusicGameObject = FindFirstObjectByType<MenuMusicObject>();
-
-        if (menuMusicGameObject != null)
-        {
-            Debug.Log("menuMusicGameObject Found");
-        }
-        else
-        {
-            Debug.Log("menuMusicGameObject Not Found");
-        }
-        /*
-        ClickSoundObject clickSoundGameObject = FindFirstObjectByType<ClickSoundObject>();
-        DeathSoundObject deathSoundGameObject = FindFirstObjectByType<DeathSoundObject>();
-        HitSoundObject hitSoundGameObject = FindFirstObjectByType<HitSoundObject>();
-        PowerupSoundObject powerupSoundGameObject = FindFirstObjectByType<PowerupSoundObject>();*/
-
-        // Matching the Audio Source components of those game objects.
-        //menuMusicSource = menuMusicGameObject.gameObject.GetComponent<AudioSource>()/
-        GameObject testMainMenuObject = menuMusicGameObject.gameObject;
-
-        if (testMainMenuObject != null)
-        {
-            Debug.Log("testMainMenuObject Found");
-        }
-        else
-        {
-            Debug.Log("testMainMenuObject Not Found");
-        }
-
-        AudioSource testMainMenuAudioSource = testMainMenuObject.GetComponent<AudioSource>();
-        if (testMainMenuAudioSource != null)
-        {
-            Debug.Log("testMainMenuAudioSource Found");
-        }
-        else
-        {
-            Debug.Log("testMainMenuAudioSource Not Found");
-        }
-
-        menuMusicSource = testMainMenuAudioSource;
-        if (menuMusicSource != null)
-        {
-            Debug.Log("menuMusicSource Found");
-        }
-        else
-        {
-            Debug.Log("menuMusicSource Not Found");
-        }
-
-        /*clickSound = clickSoundGameObject.gameObject.GetComponent<AudioSource>();
-        deathSound = deathSoundGameObject.gameObject.GetComponent<AudioSource>();
-        hitSound = hitSoundGameObject.gameObject.GetComponent<AudioSource>();
-        powerupSound = powerupSoundGameObject.gameObject.GetComponent<AudioSource>();
-
-        // Finding the menu state objects
-        TitleScreenObject titleScreenObject = FindFirstObjectByType<TitleScreenObject>();
-        MainMenuObject mainMenuObject = FindFirstObjectByType<MainMenuObject>();
-        OptionsMenuObject optionsMenuObject = FindFirstObjectByType<OptionsMenuObject>();
-        CreditsMenuObject creditsMenuObject = FindFirstObjectByType<CreditsMenuObject>();
-        GameplayMenuObject gameplayMenuObject = FindFirstObjectByType<GameplayMenuObject>();
-        GameOverMenuObject gameOverMenuObject = FindFirstObjectByType<GameOverMenuObject>();
-        VictoryMenuObject victoryMenuObject = FindFirstObjectByType<VictoryMenuObject>();
-
-        //Setting the variables for the menu states.
-        TitleScreenStateObject = titleScreenObject.gameObject;
-        MainMenuStateObject = mainMenuObject.gameObject;
-        OptionsStateObject = optionsMenuObject.gameObject;
-        CreditsStateObject = creditsMenuObject.gameObject;
-        GameplayStateObject = gameplayMenuObject.gameObject;
-        GameOverScreenStateObject = gameOverMenuObject.gameObject;
-        VictoryScreenStateObject = victoryMenuObject.gameObject;
-
-        MapGenerator mapGeneratorObject = FindFirstObjectByType<MapGenerator>();
-        mapGenerator = mapGeneratorObject;*/
     }
 }

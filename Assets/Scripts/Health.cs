@@ -54,6 +54,14 @@ public class Health : MonoBehaviour
         }
         source.controller.AddToScore(gameObject.GetComponent<Pawn>().rewardPoints);
 
+        // Going to victory screen if the player defeats a tank.
+        if (source.controller.score > ((GameManager.instance.mapGenerator.cols * GameManager.instance.mapGenerator.rows) / 2) * 40)
+        {
+            GameManager.instance.DeactivateAllStates();
+            GameManager.instance.EnableMainMenuCamera();
+            GameManager.instance.ActivateVictoryScreen();
+        }
+
         if (controller != null)
         {
             controller.RemoveFromLives(1);
@@ -124,7 +132,9 @@ public class Health : MonoBehaviour
                 else
                 {
                     Debug.Log("Tank Died");
-                    GameManager.instance.onePlayerReset();
+                    GameManager.instance.DeactivateAllStates();
+                    GameManager.instance.EnableMainMenuCamera();
+                    GameManager.instance.ActivateGameOverScreen();
                 }
             }
         }

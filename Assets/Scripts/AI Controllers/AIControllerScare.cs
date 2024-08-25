@@ -79,7 +79,10 @@ public class AIControllerScare : AIController
         pawn.turnSpeed = 600;
 
         // Chase
-        Seek(target);
+        if (target != null)
+        {
+            Seek(target);
+        }
 
         // Shoot on cooldown
         if (Time.time - lastShootTime > fireRate)
@@ -105,15 +108,18 @@ public class AIControllerScare : AIController
         }
 
         //Can the tank see the player?
-        if (CanSee(target))
+        if (target != null)
         {
-            Debug.Log("Can See From Patrol");
-            ChangeState(AIState.Attack);
-            return;
-        }
-        if (CanHear(target))
-        {
-            ChangeState(AIState.Attack);
+            if (CanSee(target))
+            {
+                Debug.Log("Can See From Patrol");
+                ChangeState(AIState.Attack);
+                return;
+            }
+            if (CanHear(target))
+            {
+                ChangeState(AIState.Attack);
+            }
         }
 
         //Patroling Waypoints.

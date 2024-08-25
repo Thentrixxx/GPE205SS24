@@ -76,7 +76,10 @@ public class AIControllerDefense : AIController
     protected override void DoAttackState()
     {
         // Chase
-        AntiSeek(target);
+        if (target != null)
+        {
+            AntiSeek(target);
+        }
 
         // Shoot on cooldown
         if (Time.time - lastShootTime > fireRate)

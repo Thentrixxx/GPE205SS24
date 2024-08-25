@@ -13,6 +13,13 @@ public class PowerupScore : Powerup
         Pawn tankPawn = target.GetComponent<Pawn>();
 
         tankPawn.controller.AddToScore(scoreToAdd);
+
+        if (tankPawn.controller.score > ((GameManager.instance.mapGenerator.cols * GameManager.instance.mapGenerator.rows) / 2) * 40)
+        {
+            GameManager.instance.DeactivateAllStates();
+            GameManager.instance.EnableMainMenuCamera();
+            GameManager.instance.ActivateVictoryScreen();
+        }
     }
 
     public override void Remove(PowerupManager target)

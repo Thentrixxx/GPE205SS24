@@ -260,7 +260,10 @@ public class AIController : Controller
         pawn.turnSpeed = 100;
         CheckHealth();
         // Chase
-        Seek(target);
+        if (target != null)
+        {
+            Seek(target);
+        }
         // Shoot
         if (Time.time - lastShootTime > fireRate)
         {
@@ -291,17 +294,20 @@ public class AIController : Controller
         }
 
         //Can the tank see the player?
-        if (CanSee(target))
+        if (target != null)
         {
-            Debug.Log("Can See From Patrol");
-            ChangeState(AIState.Chase);
-            return;
-        }
+            if (CanSee(target))
+            {
+                Debug.Log("Can See From Patrol");
+                ChangeState(AIState.Chase);
+                return;
+            }
 
-        //If can hear the player.
-        if (CanHear(target))
-        {
-            ChangeState(AIState.Chase);
+            //If can hear the player.
+            if (CanHear(target))
+            {
+                ChangeState(AIState.Chase);
+            }
         }
 
         //Checking for health.

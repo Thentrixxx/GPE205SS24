@@ -58,15 +58,18 @@ public class AIControllerAggressive : AIController
         }
 
         // If player is within feild of view
-        if (CanSee(target))
+        if (target != null)
         {
-            Debug.Log("Can See From Scan");
-            ChangeState(AIState.Attack);
-            return;
-        }
-        if (CanHear(target))
-        {
-            ChangeState(AIState.Attack);
+            if (CanSee(target))
+            {
+                Debug.Log("Can See From Scan");
+                ChangeState(AIState.Attack);
+                return;
+            }
+            if (CanHear(target))
+            {
+                ChangeState(AIState.Attack);
+            }
         }
     }
     protected override void DoAttackState()
@@ -114,15 +117,18 @@ public class AIControllerAggressive : AIController
         }
 
         // If player is within feild of view
-        if (CanSee(target))
+        if (target != null)
         {
-            Debug.Log("Can See From Scan");
-            ChangeState(AIState.Attack);
-            return;
-        }
-        if (CanHear(target))
-        {
-            ChangeState(AIState.Attack);
+            if (CanSee(target))
+            {
+                Debug.Log("Can See From Scan");
+                ChangeState(AIState.Attack);
+                return;
+            }
+            if (CanHear(target))
+            {
+                ChangeState(AIState.Attack);
+            }
         }
 
         //Patroling Waypoints.
